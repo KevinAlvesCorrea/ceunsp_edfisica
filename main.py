@@ -42,8 +42,6 @@ def env_conf(dest,cod):
     mail.send(msg)
 
 
-
-
 @app.route("/" , methods = ['GET','POST'])
 def home2():
     if request.method == 'POST':
