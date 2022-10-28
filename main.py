@@ -322,7 +322,6 @@ def cadastro():
         email = request.form['mail']
         password = request.form['passw']
         session['email'] = email
-        session['code'] = gen_cod()
         return redirect('/confirm_mail')
     return render_template('index_teste.html', email=email)
 
@@ -330,7 +329,7 @@ def cadastro():
 @app.route("/confirm_mail", methods=['GET', 'POST'])
 def index():
     email = session.get('email')
-    code = session.get('code')
+    code = gen_cod()
     print(email, code)
     env_conf(email, code)
     if request.method == 'POST':
