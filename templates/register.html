@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/rstilo.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <title>Registro</title>
+<body>
+    <div class="container">
+        <h2>Registro do aluno</h2>
+        <br>
+        <form action="#" id="form" method="post">
+            <div class="input-field">
+                <input type="text" id="name" name="name1" placeholder="." autocomplete="off">
+                <label for="name">Nome Completo:</label>
+                <small>Error message</small>
+            </div>
+
+            <div class="input-field">
+                <input type="date" id="born" name="born1" placeholder="dd/mm/aaaa" autocomplete="off">
+                <label for="born">Data de Nascimento:</label>
+                <small>Error message</small>
+            </div>
+
+            <div class="input-field">
+                <input type="email" id="email" name="email" placeholder="." autocomplete="off">
+                <label for="email">Email:</label>
+                <small>Error message</small>
+            </div>
+            
+            <div class="input-field">
+                <input type="password" id="password" name="password" placeholder=".">
+                <label for="password">Senha:</label>
+                <small>Error message</small>
+            </div>
+
+            <div class="input-field">
+                <input type="password" id="password_confirmation" name="password2" placeholder=".">
+                <label for="password_confirmation">Confirmar Senha:</label>
+                <small>Error message</small>
+            </div>
+
+            <div class="check">
+                <input type="checkbox" onclick="checar()" id="aceitar" name="checkbox">
+                
+            </div>
+            <p> Eu aceito os termos de <a href="https://www.google.com.br/">Politica de privacidade. </a></p>
+
+
+            <button id="register" type="submit" disabled>Registrar</button>
+            
+        
+        </form>
+    </div>
+          <script src="{{ url_for('static',filename='js/register_index.js') }}"></script>
+        
+
+
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Olá {{user}}</title>
+</head>
+<body>
+    <h1> Bom dia {{user}}</h1>
+    <form method="post">
+
+        <input type="range" id="d_min" name="d_min" min="6" max="20" value="0" oninput="amount1.value=d_min.value">
+        <input type="range" id="v_min" name="v_min" min="6" max="20" value="0" oninput="amount2.value=v_min.value">
+        <input type="range" id="t_min" name="t_min" min="6" max="20" value="0" oninput="amount3.value=t_min.value">
+        <input type="range" id="q_min" name="q_min" min="6" max="20" value="0" oninput="amount4.value=q_min.value">
+        <br>
+        <output id="amount1" name="amount1" for="d_min">6</output>
+        <output id="amount2" name="amount2" for="v_min">6</output>
+        <output id="amount3" name="amount3" for="t_min">6</output>
+        <output id="amount4" name="amount4" for="q_min">6</output>
+        <br>
+        <br>
+        <input type="text" name="monit" placeholder="Monitor: " value="{{request.form.monit}}">
+        <br>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <a type="submit" href="{{ url_for('logout') }}">
+        Logout
+    </a>
+</body>
+</html>

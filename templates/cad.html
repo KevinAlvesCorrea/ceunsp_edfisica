@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/estilo2.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+</head>
+<body>
+
+    <div class="conteiner">
+        <header>
+                <div class="home">
+                   <a href="#">Página inicial</a>                                              
+                </div>
+
+        </header>
+        <form action="#" id="form" method="post" >
+        <main>
+
+            <div class="input-field">
+                <label for="nome">Nome completo:</label><br>
+                <input type="text" id="nome" autocomplete="off" >               
+            </div>
+            <div class="input-field">
+                <label for="snome">Nome social:</label><br>
+                <input type="text" id="snome" autocomplete="off" >  
+            </div>
+            <div class="input-field">
+                <label for="endereco">Endereço:</label><br>
+                <input type="text" id="endereco" autocomplete="off" >
+            </div>
+
+            <div class="input-field">
+                <label for="email">Email:</label><br>
+                <input type="email" id="email"  autocomplete="off">             
+            </div>
+            
+            <div class="input-field">
+                <label for="dnasc">Data de nascimento:</label><br>
+                <input type="date" id="dnasc" >            
+            </div>
+            <div class="input-field">
+                <br>  <label for="cell">Telefone celular:</label><br>
+                <input type="tel" id="cell" pattern="\([0-9]{2}\)[9]{1}[0-9]{4}-[0-9]{4}" placeholder="(xx) 9xxxx-xxxx" autocomplete="on"><br><br>     
+            </div>
+            <div class="input-field">
+                <label for="whats">É WhatsApp? </label><br><br>
+                <label><input type="radio" id="whats" value="sim"> Sim </label>
+                <label><input type="radio" id="whats" value="nao"> Não </label>
+            </div>
+            <div class="input-field">
+                <br><label for="convenio">Possui convenio Médico? </label><br><br>
+                <label><input type="radio" id="convenio" value="sim"> Sim </label>
+                <label><input type="radio" id="convenio" value="nao"> Não </label>
+            </div>
+
+            <div class="input-field"> <br>               
+                <label for="nconv"> Se sim, qual?</label><br>
+                <input type="text" id="nconv" >               
+            </div>
+            <div class="input-field">
+                <label for="ecell">Contato de emergência:</label><br>
+                <input type="tel" id="ecell" pattern="\([0-9]{2}\)[9]{1}[0-9]{4}-[0-9]{4}" placeholder="(xx) 9xxxx-xxxx" autocomplete="off">
+
+            </div>
+            <div class="input-field"><br>               
+                <label for="enome"> Nome/Parentesco: </label>
+                <input type="text" id="enome">              
+            </div> 
+            <br>
+        </main>
+        <aside>
+
+            <h1>Par-Q – QUESTIONÁRIO DE PRONTIDÃO PARA A PRÁTICA DE ATIVIDADE FÍSICA</h1>
+
+            <p>O bom senso é o seu melhor guia para responder as perguntas abaixo. Por favor, leia com atenção e 
+                responda honestamente SIM ou NÃO para cada uma delas.</p>
+
+        <table>
+            <tr>
+                <th>Questões</th>
+                <th>Sim</th>
+                <th>Não</th>
+                
+            </tr>
+          <tbody>
+            <tr>
+                <td><br>1. Algum médico já disse que você possui algum problema de coração e que só 
+                    deveria realizar atividade física supervisionado por profissionais de saúde? <br> </td>
+                <td><input class="rad" type="radio" name="p1" value="sim"></td>
+                <td><input class="rad" type="radio" name="p1" value="nao"></td>
+            </tr>
+            <tr>
+                <td><br>2. Você sente dores no peito quando pratica atividade física?<br> </td>
+                <td><input class="rad" type="radio" name="p2" value="sim"></td>
+                <td><input class="rad" type="radio" name="p2" value="nao"></td>
+            </tr>
+            <tr>
+                <td><br>3. No último mês, você sentiu dores no peito quando praticou atividade física?<br> </td>
+                <td><input class="rad" type="radio" name="p3" value="sim"></td>
+                <td><input class="rad" type="radio" name="p3" value="nao"></td>
+            </tr>
+            <tr>
+                <td><br>4. Você apresenta desequilíbrio devido à tontura e/ou perda de consciência?<br> </td>
+                <td><input class="rad" type="radio" name="p4" value="sim"></td>
+                <td><input class="rad" type="radio" name="p4" value="nao"></td>
+            </tr>
+            <tr>
+                <td><br>5. Você possui algum problema ósseo ou articular que poderia ser piorado pela atividade 
+                    física?<br> </td>
+                    <td><input class="rad" type="radio" name="p5" value="sim"></td>
+                    <td><input class="rad" type="radio" name="p5" value="nao"></td>
+            </tr>
+            <tr>
+                <td><br>6. Você toma atualmente algum medicamento para pressão arterial e/ou problema de 
+                    coração?</td>
+                <td><input class="rad" type="radio" name="p6" value="sim"> </td>
+                <td><input class="rad" type="radio" name="p6" value="nao"></td>
+            </tr>
+            <tr>
+                <td><br>7. Sabe de alguma outra razão pela qual você não deve praticar atividade física?</td>
+                <td><input class="rad" type="radio" name="p7" value="sim"></td>
+                <td><input class="rad" type="radio" name="p7" value="nao"></td>
+            </tr>
+           </tbody> 
+        </table> <br><br>
+
+
+    
+             
+        
+        <h5><input type="checkbox" onclick="checar()" id="aceitar" name="checkbox"> Declaro que todas informações fornecidas são verdadeiras e que li e aceito os <a href="#"> termos de uso </a> e <a href="#">Responsabilidade para Prática de Atividade Física.</a></h5>
+       
+
+        
+        <button id="register" type="submit" disabled>enviar</button>
+
+        </aside>
+        
+   </form>
+</div>
+
+
+<script>
+        const form = document.getElementById('form')
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            let nome = document.getElementById('')
+            let senha = document.getElementById('senha')
+
+             if (checkInputs()) {
+                e.target.submit();
+             }
+        });
+
+            function checkInputs() {
+            let status = true;
+
+            let emailValue = email.value.trim()
+            let senhaValue = senha.value.trim()
+
+            if (emailValue === ''){
+
+                errorValidation(email, 'Por favor, informe o email ! .')
+                status = false
+            }else{
+                successValidation(email)
+
+            }
+
+            if (senhaValue === ''){
+                errorValidation(senha, 'Por favor, Informe sua senha.')
+                status = false
+            }else{
+                successValidation(senha)
+
+            }
+
+            const formControls = form.querySelectorAll('.input-field')
+            const formIsValid = [...formControls].every(formControl => {
+                return (formControl.className === "input-field success")
+
+            })
+
+            if (formIsValid){
+            console.log('O formulario é válido')
+            }
+
+            return status;
+        }
+
+        function errorValidation(input, message){
+            const formControl = input.parentElement;
+            const small = formControl.querySelector('small')
+            small.innerText = message
+
+            formControl.className = 'input-field error'
+        }
+
+        function successValidation(input){
+            const formControl = input.parentElement;
+
+            formControl.className = 'input-field success'
+
+        }
+
+    
+</script>
+</body>

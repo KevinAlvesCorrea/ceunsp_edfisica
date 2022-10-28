@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resposta</title>
+</head>
+<body>
+    <h1> Bom dia {{user}}</h1>
+    <form action=" " method="post">
+
+    <!--    {% for n1 in range(0,10)%}
+        {%for roll in msg[n1]%}
+            <a>{{ roll }}</a>
+        {%endfor%}
+        <br>
+        {% endfor %}
+     -->
+    {% for n1 in range (0,10) %}
+        {% for roll in cont[n1] %}
+            <a> {{ roll }}</a>
+            <br>
+        {% endfor %}
+    {% endfor %}
+
+    <input type="text" name="mensagem" placeholder="Insira a mensagem : " value="{{request.form.mensagem}}">
+
+
+    <button type="submit">Enviar</button>
+
+
+    </form>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Olá {{user}}</title>
+</head>
+<body>
+    <h1> Bom dia {{user}}</h1>
+<form action="#" method="post">
+    <h1> Relatório banco:</h1>
+    {% for n1 in range(0,10)%}
+        {%for roll in banco[n1]%}
+            <a>{{ roll }}</a>
+        {%endfor%}
+        <br>
+    {% endfor %}
+    <h1>Consulta de usuarios no banco: </h1>
+    <input type="text" placeholder="Username" name="username">
+    <input type="password" placeholder="Password" name="password">
+    <input class="btn btn-default" type="submit" name="consulta" value="consulta">
+    <br><br>
+    {% for n in range(0,10)%}
+        {%for roll in relatorio[n]%}
+            <a>{{ roll }}</a>
+        {%endfor%}
+    {% endfor %}
+
+    <a type="submit" href="{{ url_for('excel') }}">Relatório</a>
+
+    <a type="submit" href="{{ url_for('logout') }}">
+        Logout
+    </a>
+</form>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Material de Acolhimento</title>
+</head>
+<body>
+    <h1> Bom dia {{user}}</h1>
+    <form action=" " method="post">
+
+    <input type="text" name="destino" placeholder="Informe o destinatário (email): " value="{{request.form.destino}}"  >
+
+    <input type="text" name="mensagem" placeholder="Insira a mensagem : " value="{{request.form.mensagem}}">
+
+
+    <button type="submit">Enviar</button>
+    <a type="button" href="{{url_for('resposta')}}">
+        Verificar suas mensagens recebidas:
+    </a>
+
+    </form>
+</body>
+</html>
