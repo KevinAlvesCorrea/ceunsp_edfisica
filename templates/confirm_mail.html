@@ -6,11 +6,11 @@
 </head>
 <body>
 <form method = 'POST'>
-<!-- Conteúdo -->
 	<h1> Confirmação </h1>
 	<h3> Um numero de confirmação foi enviado ao seu email , por favor insira-o aqui:</h3>
 	<input type='number' id='code_user' name='code_user' placeholder='insira o código aqui:' >
 	<button type='submit' name='button'> Enviar </button>
+	<a href="{{url_for('enviar')}}">Enviar código novamente </a>
 </form>
 </body>
 </html>

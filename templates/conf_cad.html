@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/estilo.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Código de Confirmação</h2>
+        <form action="#" id="form" method="post">
+            <br>
+            <br>
+            <div class="input-field">
+                <input type="number" id="code_user" name="code_user" placeholder="." maxlength="6" min="0"  autocomplete="off" value="{{request.form.code_conf}}" required>
+                <label for="code_user">Código:</label>
+
+                <small>Error messege</small>
+            </div>
+
+            {% if msg != None%}
+                <div class="input-field error" id="msg111">
+                    <center><small>{{msg}}</small></center>
+                </div>
+            {%endif%}
+
+            <div class="input-field">
+                <a><small>Error</small></a>
+                <button id="login" type="submit">Entrar</button>
+            </div>
+
+        </form>
+            <div class="links-uteis">
+            <p> Não recebeu um código ? <a href="{{url_for('enviar') }}">Reenviar </a></p>
+        </div>
+    </div>
+
+<!--    <script>-->
+
+<!--        var vari = '{{msg}}';-->
+
+<!--        const form = document.getElementById('form')-->
+
+<!--        form.addEventListener('submit', e => {-->
+<!--            e.preventDefault();-->
+
+<!--            const email = document.getElementById('email')-->
+<!--            const senha = document.getElementById('senha')-->
+<!--            const msg = document.getElementById('msg11')-->
+
+<!--             if (checkInputs()) {-->
+<!--                e.target.submit();-->
+<!--             }-->
+<!--        });-->
+
+<!--            function checkInputs() {-->
+<!--            let status = true;-->
+
+<!--            let emailValue = email.value.trim()-->
+<!--            let senhaValue = senha.value.trim()-->
+
+
+<!--            if (emailValue === ''){-->
+<!--                errorValidation(email, 'Por favor, Informe o email.')-->
+<!--                status = false-->
+<!--            }else{-->
+<!--                successValidation(email)-->
+
+<!--            }-->
+
+<!--            if (senhaValue === ''){-->
+<!--                errorValidation(senha, 'Por favor, Informe sua senha.')-->
+<!--                status = false-->
+<!--            }else{-->
+<!--                successValidation(senha)-->
+
+<!--            }-->
+
+<!--            const formControls = form.querySelectorAll('.input-field')-->
+<!--            const formIsValid = [...formControls].every(formControl => {-->
+<!--                return (formControl.className === "input-field success")-->
+
+<!--            })-->
+
+<!--            if (formIsValid){-->
+<!--            console.log('O formulario é válido')-->
+<!--            }-->
+
+<!--            return status;-->
+<!--        }-->
+
+<!--        function errorValidation(input, message){-->
+<!--            const formControl = input.parentElement;-->
+<!--            const small = formControl.querySelector('small')-->
+<!--            small.innerText = message-->
+
+<!--            formControl.className = 'input-field error'-->
+<!--        }-->
+
+<!--        function successValidation(input){-->
+<!--            const formControl = input.parentElement;-->
+
+<!--            formControl.className = 'input-field success'-->
+
+<!--        }-->
+<!--        function fun(){-->
+<!--            alert(vari);-->
+<!--        }-->
+
+<!--</script>-->
+
+    
+</body>
+</html>

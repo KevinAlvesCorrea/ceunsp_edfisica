@@ -53,21 +53,36 @@ def home2():
 
         mail = c.execute('SELECT * FROM login WHERE email = ?',([user])).fetchone()
         if mail:
-            passw = c.execute('SELECT password FROM login WHERE email = ?', ([user])).fetchone()
-            if check_password_hash(passw[0], password):
-                u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
-                n = c.execute('SELECT * FROM aluno WHERE email = ?',[user]).fetchone()
-                session['logged'] = True
-                session["id"] = u[0]
-                session["user"] = n[2]
+            if user != 'professor@sistema.com':
+                passw = c.execute('SELECT password FROM login WHERE email = ?', ([user])).fetchone()
+                if check_password_hash(passw[0], password):
+                    u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
+                    n = c.execute('SELECT * FROM aluno WHERE email = ?',[user]).fetchone()
+                    session['logged'] = True
+                    session["id"] = u[0]
+                    session["user"] = n[2]
+                    session["mail"] = user
 
-                conn.commit()
-                conn.close()
+                    conn.commit()
+                    conn.close()
 
-                return redirect(url_for('user_page'))
+                    return redirect(url_for('user_page'))
+                else:
+                    erro = "passw"
+                    print("erro na senha !")
             else:
-                erro = "passw"
-                print("erro na senha !")
+                passw = c.execute('SELECT password FROM login WHERE email = ?', ([user])).fetchone()
+                if check_password_hash(passw[0], password):
+                    u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
+                    session['logged'] = True
+                    session["id"] = u[0]
+                    session["mail"] = user
+
+                    conn.commit()
+                    conn.close()
+
+                    return redirect(url_for('pag_admin'))
+
         else:
             erro = "mail_wrong"
             msg1 = "E-mail incorreto !"
@@ -97,33 +112,78 @@ def register():
         nome = request.form['name1']
         nasc = request.form['born1']
         user = request.form['email']
+        passw = request.form['password']
 
         mail = c.execute('SELECT * FROM login WHERE email = ?',([user])).fetchone()
 
         if mail:
             print("Usuario já cadastrado !")
         else:
-            c.execute('INSERT INTO login (email,password) VALUES (?,?)',
-                      (user,generate_password_hash(request.form['password'],method='sha256')))
 
-            u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
+            session['n'] = nome
+            session['nas'] = nasc
+            session['u'] = user
+            session['p'] = passw
 
-            c.execute('INSERT INTO aluno (id_log,nome,data_nasc,email) VALUES (?,?,?,?)',(u[0],nome.replace(" ","").lower(),nasc,user))
-
-            session['logged'] = True
-            session["id"] = u[0]
-            session["user"] = nome
-
-            conn.commit()
-            conn.close()
-
-            return redirect(url_for("user_page"))
+            return redirect(url_for("enviar"))
 
     elif request.method == 'GET':
         if "user" in session:
             return (redirect(url_for("user_page")))
 
     return render_template('register.html')
+
+@app.route("/enviar",methods =['GET'])
+def enviar():
+    mail = session.get('u')
+    code = gen_cod()
+    session['cod'] = code
+    print("Codigo gerado e o email  ",mail , code )
+    env_conf(mail,code)
+    print("Email enviado !")
+    return redirect(url_for("conf_mail"))
+
+@app.route("/confirm_mail/", methods=['GET','POST'])
+def conf_mail():
+    code = session.get('cod')
+    nome = session.get('n')
+    nasc = session.get('nas')
+    user = session.get('u')
+    passw = session.get('p')
+
+    if request.method == 'POST':
+        if request.form.get('code_user') != "":
+            print(request.form['code_user'])
+            code_user = int(request.form['code_user'])
+            print(code_user)
+            if (code == code_user):
+
+                conn = sqlite3.connect('bd_dados.db')
+                c = conn.cursor()
+
+                c.execute('INSERT INTO login (email,password) VALUES (?,?)',
+                          (user, generate_password_hash(passw, method='sha256')))
+
+                u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
+
+                c.execute('INSERT INTO aluno (id_log,nome,data_nasc,email) VALUES (?,?,?,?)',
+                          (u[0], nome.replace(" ", "").lower(), nasc, user))
+
+                session['logged'] = True
+                session["id"] = u[0]
+                session["user"] = nome
+
+                session.pop('cod',None)
+
+                conn.commit()
+                conn.close()
+
+                return redirect(url_for("user_page"))
+
+            else:
+                print('INCORRETO')
+
+    return render_template('conf_cad.html')
 
 @app.route("/usuarios", methods = ['GET','POST'])
 def user_page():
@@ -161,8 +221,8 @@ def user_page():
 
 @app.route("/admin",methods = ['GET','POST'])
 def pag_admin():
-    if "user" in session:
-            if session['user'] == 'kevinalvescorrea':
+    if "mail" in session:
+            if session['mail'] == 'professor@sistema.com':
                 banco = None
                 relatorio = None
                 format = None
@@ -204,21 +264,8 @@ def logout():
     session.pop("logged",None)
     session.pop("id",None)
     session.pop("user",None)
+    session.pop("mail",None)
     return redirect(url_for("home2"))
-
-@app.route("/relatorio",methods=['GET','POST'])
-def relatorio():
-    if request.method == 'POST':
-        b = sqlite3.connect('bd_dados.db')
-        c = b.cursor()
-
-        df = pd.read_sql("select * from form", c)
-        df.to_excel("excel/saida2.xlsx", index=False)
-
-        b.commit()
-        b.close()
-
-        return True
 
 @app.route("/download", methods=['GET'])
 def download():
@@ -314,7 +361,6 @@ def radio():
 
     return render_template("radio.html", resp = resp)
 
-
 @app.route("/cadastro", methods=['GET', 'POST'])
 def cadastro():
     email = None
@@ -322,27 +368,13 @@ def cadastro():
         email = request.form['mail']
         password = request.form['passw']
         session['email'] = email
+
         return redirect('/confirm_mail')
     return render_template('index_teste.html', email=email)
 
-
-@app.route("/confirm_mail", methods=['GET', 'POST'])
-def index():
-    email = session.get('email')
-    code = gen_cod()
-    print(email, code)
-    env_conf(email, code)
-    if request.method == 'POST':
-        code_user = int(request.form['code_user'])
-        print(code_user)
-        if (code == code_user):
-            print('CORRETO')
-            render_template('user.html', user=None, email=None, passw=None)
-        else:
-            print('INCORRETO')
-
-    return render_template('confirm_mail.html')
-
+@app.route("/termos", methods=['GET','POST'])
+def termos():
+    return render_template('termos.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
