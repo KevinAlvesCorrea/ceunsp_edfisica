@@ -217,7 +217,7 @@ def enviar():
         code = gen_cod()
         session['cod'] = code
         print("Codigo gerado e o email  ",mail , code )
-        # env_conf(mail,code)
+        env_conf(mail,code)
         print("Email enviado !")
         return redirect(url_for("conf_mail"))
     else:
@@ -226,7 +226,7 @@ def enviar():
         code = gen_cod()
         session['cod'] = code
         print("Codigo gerado e o email  ", mail, code)
-        # env_conf(mail, code)
+        env_conf(mail, code)
         print("Email enviado !")
         return redirect(url_for("conf_mail"))
 
@@ -325,8 +325,6 @@ def troca_senha():
 
 
     return render_template("troca_senha.html")
-
-
 
 @app.route("/usuarios", methods = ['GET','POST'])
 def user_page():
