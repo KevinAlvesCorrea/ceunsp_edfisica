@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/senha.css')}}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova senha</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Digite sua nova senha</h2>
+        <br><br>
+        <form action="#" id="form" method="post">
+            
+            <div class="input-field">
+                <input type="password" id="senha" name="password" placeholder=".">
+                <label for="senha">Senha:</label>
+                <small>Error messege</small>
+            <br><br>
+            </div>
+
+            <div class="input-field">
+                <input type="password" id="senha2" name="password2" placeholder=".">
+                <label for="senha2">Confirmar Senha:</label>
+                <small>Error messege</small>
+            </div>
+
+            <div class="input-field">
+                <a><small>Error</small></a>
+                <button id="login" type="submit">Confirmar</button>
+            </div>
+
+        </form>
+            
+
+       
+    </div>
+    <script>
+const form = document.getElementById('form')
+
+form.addEventListener('submit' , e => {
+    e.preventDefault();
+
+    
+    let senha = document.getElementById('senha')
+    let senha2 = document.getElementById('senha2')
+
+    if (checkInputs()) {
+        e.target.submit();
+    }
+})
+
+    function checkInputs() {
+    let status = true;
+
+    
+    let senhaValue = senha.value.trim()
+    let senha2Value = senha2.value.trim()
+
+   
+
+    if (senhaValue === ''){
+
+        errorValidation(senha, 'Por favor, informe sua senha.')
+        status = false
+    }else if(senhaValue.length <8 ){
+        errorValidation(senha, 'Senha deve ter no minimo 8 caracteres.')
+        status = false
+
+    }else{
+        successValidation(senha)
+
+    }
+
+    if (senha2Value === ''){
+        errorValidation(senha2, 'Preencha esse campo')
+        status = false
+
+    }else if (senha2Value !== senhaValue ){
+        errorValidation(senha2, 'As senhas devem ser iguais.')
+        status = false
+
+    }else{
+
+        successValidation(senha2)
+
+    }
+
+
+    const formControls = form.querySelectorAll('.input-field')
+        const formIsValid = [...formControls].every(formControl => {
+            return (formControl.className === "input-field success")
+
+
+
+        })
+
+    if (formIsValid){
+        console.log('O formulario é válido')
+
+    }
+
+    return status;
+
+}
+
+function errorValidation(input, message){
+    const formControl = input.parentElement;
+    const small = formControl.querySelector('small')
+    small.innerText = message
+
+    formControl.className = 'input-field error'
+}
+
+function successValidation(input){
+    const formControl = input.parentElement;
+
+    formControl.className = 'input-field success'
+
+}
+
+    </script>
+
+</body>
+</html>  

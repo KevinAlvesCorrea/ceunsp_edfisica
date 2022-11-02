@@ -41,6 +41,60 @@ def env_conf(dest,cod):
     """ msg.html = "<b> Hey kevin </b> , sending you this message becase we need to talk man , call me <a href= "" >teste</a>,see"  """
     mail.send(msg)
 
+def troca_mail(m_old,m_new):
+
+    b = sqlite3.connect('bd_dados.db')
+    c = b.cursor()
+
+    exist = c.execute('SELECT email FROM login WHERE email = ? ',(m_old))
+    if exist:
+        c.execute("""
+            UPDATE login
+            SET email = ?
+            WHERE email = ?;
+        """, (m_new, m_old))
+
+
+    else:
+        return
+
+    b.commit()
+    b.close()
+
+    return True
+
+def troca_senha(p_old,p_new,email):
+
+    b = sqlite3.connect('bd_dados.db')
+    c = b.cursor()
+
+    conf = c.execute("""
+        SELECT password FROM login WHERE email = ?;
+    """, [email]).fetchall()
+
+    chave = ''
+    for n in conf:
+        chave = n[0]
+
+    mail = c.execute("""SELECT email FROM login WHERE email = ? """,[email])
+
+    if mail:
+        if check_password_hash(chave,p_old) == True:
+
+          n_pass1 = generate_password_hash(p_new,method='sha256')
+          c.execute("""
+            UPDATE login SET 
+            password = ? 
+            WHERE email = ?;
+          """,(n_pass1,email)).fetchall()
+
+          return "Success"
+
+        else:
+            return "Senha não confere ! "
+    else:
+        return "Email não confere ! "
+
 
 @app.route("/" , methods = ['GET','POST'])
 def home2():
@@ -57,10 +111,10 @@ def home2():
                 passw = c.execute('SELECT password FROM login WHERE email = ?', ([user])).fetchone()
                 if check_password_hash(passw[0], password):
                     u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
-                    n = c.execute('SELECT * FROM aluno WHERE email = ?',[user]).fetchone()
                     session['logged'] = True
                     session["id"] = u[0]
-                    session["user"] = n[2]
+                    session["user"] = u[1]
+                    print(u[1])
                     session["mail"] = user
 
                     conn.commit()
@@ -124,6 +178,7 @@ def register():
             session['nas'] = nasc
             session['u'] = user
             session['p'] = passw
+            session['cad'] = 'y'
 
             return redirect(url_for("enviar"))
 
@@ -133,57 +188,145 @@ def register():
 
     return render_template('register.html')
 
+@app.route("/redefinirSenha ",methods=['POST','GET'])
+def redef_senha():
+    if request.method == 'POST':
+
+        email = request.form.get('email')
+
+        b = sqlite3.connect('bd_dados.db')
+        c = b.cursor()
+
+        m_sess = c.execute("""SELECT email FROM login WHERE email = ?""", [email]).fetchall()
+        if (m_sess):
+            for n in m_sess[0]:
+                session['mail'] = n
+            return redirect(url_for("enviar"))
+        else:
+            print("Email não existe !")
+
+
+
+    return render_template("email.html")
+
 @app.route("/enviar",methods =['GET'])
 def enviar():
-    mail = session.get('u')
-    code = gen_cod()
-    session['cod'] = code
-    print("Codigo gerado e o email  ",mail , code )
-    env_conf(mail,code)
-    print("Email enviado !")
-    return redirect(url_for("conf_mail"))
+    if session.get('cad'):
+        print("vim do cadastro")
+        mail = session.get('u')
+        code = gen_cod()
+        session['cod'] = code
+        print("Codigo gerado e o email  ",mail , code )
+        # env_conf(mail,code)
+        print("Email enviado !")
+        return redirect(url_for("conf_mail"))
+    else:
+        print("vim da recuperação de senha ")
+        mail = session.get('mail')
+        code = gen_cod()
+        session['cod'] = code
+        print("Codigo gerado e o email  ", mail, code)
+        # env_conf(mail, code)
+        print("Email enviado !")
+        return redirect(url_for("conf_mail"))
+
 
 @app.route("/confirm_mail/", methods=['GET','POST'])
 def conf_mail():
     code = session.get('cod')
-    nome = session.get('n')
-    nasc = session.get('nas')
-    user = session.get('u')
-    passw = session.get('p')
 
     if request.method == 'POST':
-        if request.form.get('code_user') != "":
-            print(request.form['code_user'])
-            code_user = int(request.form['code_user'])
-            print(code_user)
-            if (code == code_user):
+        if session.get('cad') == 'y':
 
-                conn = sqlite3.connect('bd_dados.db')
-                c = conn.cursor()
+            nome = session.get('n')
+            nasc = session.get('nas')
+            user = session.get('u')
+            passw = session.get('p')
 
-                c.execute('INSERT INTO login (email,password) VALUES (?,?)',
-                          (user, generate_password_hash(passw, method='sha256')))
 
-                u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
+            if request.form.get('code_user') != "":
+                print(request.form['code_user'])
+                code_user = int(request.form['code_user'])
+                print(code_user)
+                if (code == code_user):
 
-                c.execute('INSERT INTO aluno (id_log,nome,data_nasc,email) VALUES (?,?,?,?)',
-                          (u[0], nome.replace(" ", "").lower(), nasc, user))
+                    conn = sqlite3.connect('bd_dados.db')
+                    c = conn.cursor()
 
-                session['logged'] = True
-                session["id"] = u[0]
-                session["user"] = nome
+                    c.execute('INSERT INTO login (email,password) VALUES (?,?)',
+                                  (user, generate_password_hash(passw, method='sha256')))
 
-                session.pop('cod',None)
+                    u = c.execute('SELECT * FROM login WHERE email = ?', [user]).fetchone()
 
-                conn.commit()
-                conn.close()
+                    c.execute('INSERT INTO aluno (id_log,nome,data_nasc) VALUES (?,?,?)',
+                                (u[0], nome.replace(" ", "").lower(), nasc))
 
-                return redirect(url_for("user_page"))
+                    session['logged'] = True
+                    session["id"] = u[0]
+                    session["user"] = nome
 
-            else:
-                print('INCORRETO')
+                    session.pop('cad',None)
+                    session.pop('cod',None)
+
+                    conn.commit()
+                    conn.close()
+
+                    return redirect(url_for("user_page"))
+
+                else:
+                    print('INCORRETO')
+
+        else:
+            mail = session.get('mail')
+            if request.form.get('code_user') != "":
+                print(request.form['code_user'])
+                code_user = int(request.form['code_user'])
+                print(code_user)
+                if (code == code_user):
+                    session.pop('cod',None)
+                    return redirect(url_for('troca_senha'))
+                else:
+                    print('codigo incorreto')
 
     return render_template('conf_cad.html')
+
+@app.route("/trocasenha",methods = ['GET','POST'])
+def troca_senha():
+
+    if request.method == 'POST':
+        if request.form.get('password') and request.form.get('password2')!= "":
+            b = sqlite3.connect('bd_dados.db')
+            c = b.cursor()
+
+            m = session.get('mail')
+            p = request.form.get('password')
+
+            print(session.get('mail'))
+
+            c.execute("""
+                        UPDATE login 
+                        SET password = ? 
+                        WHERE email = ?;
+            """,(generate_password_hash(p,method='sha256'),m))
+
+
+            u = c.execute('SELECT * FROM login WHERE email = ?', [m]).fetchone()
+            n = c.execute('SELECT nome FROM aluno WHERE id_log = ?',[u[0]]).fetchall()
+            session['logged'] = True
+            session["id"] = u[0]
+            session["user"] = n[0]
+
+            session.pop('mail', None)
+            b.commit()
+            b.close()
+            print('senha trocada')
+            return redirect(url_for("user_page"))
+
+
+
+    return render_template("troca_senha.html")
+
+
 
 @app.route("/usuarios", methods = ['GET','POST'])
 def user_page():
@@ -202,7 +345,7 @@ def user_page():
             v_min = request.form.get('v_min')
             t_min = request.form.get('t_min')
             q_min = request.form.get('q_min')
-            monit = request.form.get('monit')
+            monit = request.form.get('monitor')
 
             c.execute("""
                 INSERT INTO form (data,nome_aluno,dez_min,vinte_min,trinta_min,quarenta_min,monitor) VALUES (?,?,?,?,?,?,?);
@@ -215,7 +358,7 @@ def user_page():
             b.commit()
             b.close()
 
-        return render_template('user_interface.html',user = user)
+        return render_template('pag_user.html',user = user)
     else:
         return redirect(url_for("home2"))
 
@@ -245,7 +388,6 @@ def pag_admin():
                     relatorio = c.execute('SELECT * FROM login WHERE email = ? AND password = ?',
                                           (email, password)).fetchall()
                     if relatorio:
-
                         format = relatorio[0]
                         print(format)
                     else:
@@ -255,7 +397,7 @@ def pag_admin():
                     conn.close()
                 return render_template("admin_interface(list).html",banco = banco,relatorio = relatorio)
             else:
-                print('Voce não é o João !')
+                return redirect(url_for('home2'))
     else:
         return redirect(url_for("home2"))
 
@@ -309,20 +451,14 @@ def report():
 
 @app.route("/excel",methods=['GET','POST'])
 def excel():
-    # utilizando o xlsxwriter porque ele gera arquivos em xlsx
 
     b = sqlite3.connect("bd_dados.db")
     c = b.cursor()
-
-    # c.execute("SELECT * FROM form")
-    # banco = c.fetchall()
 
     outpout = io.BytesIO()
 
     workbook = xlsxwriter.Workbook(outpout,{'in_memory': True})
     worksheet = workbook.add_worksheet()
-
-
 
     n_tabl = "form"
     t = c.execute("SELECT * FROM pragma_table_info(?);",[n_tabl]).fetchall()
@@ -375,6 +511,13 @@ def cadastro():
 @app.route("/termos", methods=['GET','POST'])
 def termos():
     return render_template('termos.html')
+
+@app.route("/teste",methods=['GET','POST'])
+def teste():
+    result = troca_senha('123123123','gike2519','kevinalvesk12@gmail.com')
+    return render_template("admin_page.html",result = result)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

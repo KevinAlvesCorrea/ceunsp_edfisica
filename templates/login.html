@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/estilo_login.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
@@ -10,7 +10,7 @@
     <div class="container">
         <h2>Login</h2>
         <form action="#" id="form" method="post">
-            
+
             <div class="input-field">
                 <input type="email" id="email" name="email" placeholder="." autocomplete="off" value="{{request.form.email}}">
                 <label for="email">Email:</label>
@@ -21,15 +21,11 @@
             <div class="input-field">
                 <input type="password" id="senha" name="password" placeholder="." value="{{request.form.password }}">
                 <label for="senha">Senha:</label>
-                    
+                <br><br>
+                <a href="{{url_for('redef_senha')}}" class="senha">Esqueci a senha. </a>
+
                 <small>Error messege</small>
             </div>
-
-            {% if msg != None%}
-                <div class="input-field error" id="msg111">
-                    <center><small>{{msg}}</small></center>
-                </div>
-            {%endif%}
 
             <div class="input-field">
                 <a><small>Error</small></a>
@@ -38,8 +34,10 @@
 
         </form>
             <div class="links-uteis">
-            <p> Ainda não é cadastrado? <a href="{{url_for('register') }}"> Criar conta.</a></p>
+            <p> Ainda não é cadastrado? <a href="{{url_for('register')}}"> Criar conta.</a></p>
         </div>
+
+
     </div>
 
     <script>

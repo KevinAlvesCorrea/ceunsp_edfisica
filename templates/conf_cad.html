@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/codigo.css')}}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
@@ -10,21 +10,23 @@
     <div class="container">
         <h2>Código de Confirmação</h2>
         <form action="#" id="form" method="post">
+           
             <br>
+            <p>Um código de confirmação foi enviado ao seu email, insira-o abaixo:</p>
             <br>
             <div class="input-field">
                 <input type="number" id="code_user" name="code_user" placeholder="." maxlength="6" min="0"  autocomplete="off" value="{{request.form.code_conf}}" required>
                 <label for="code_user">Código:</label>
-
                 <small>Error messege</small>
             </div>
+            
 
-            {% if msg != None%}
+           <!--{% if msg != None%}
                 <div class="input-field error" id="msg111">
                     <center><small>{{msg}}</small></center>
                 </div>
             {%endif%}
-
+--> 
             <div class="input-field">
                 <a><small>Error</small></a>
                 <button id="login" type="submit">Entrar</button>
